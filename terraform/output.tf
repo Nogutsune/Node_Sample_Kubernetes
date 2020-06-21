@@ -4,3 +4,7 @@ output "eks_kubeconfig" {
     "aws_eks_cluster.tf_eks"
   ]
 }
+
+output "eks_cluster_name" {
+  value = aws_eks_cluster.tf_eks.name
+}
