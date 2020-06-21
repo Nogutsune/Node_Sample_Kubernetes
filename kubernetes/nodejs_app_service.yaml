@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: insider-elb-service
+  labels:
+    app: nodeapp
+spec:
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
+  selector:
+    app: nodeapp

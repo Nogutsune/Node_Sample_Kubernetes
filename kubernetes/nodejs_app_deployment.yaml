@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: insider-node-app
+  labels:
+    app: nodeapp
+spec:
+  selector:
+    matchLabels:
+      app: nodeapp
+  replicas: 10
+  # Here we define the rolling update strategy
+  # - maxSurge define how many pod we can add at a time
+  # - maxUnavailable define how many pod can be unavailable
+  #   during the rolling update
+  #
+  # Setting maxUnavailable to 0 would make sure we have the appropriate
+  # capacity during the rolling update.
+  # You can also use percentage based value instead of integer.
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 3
+  template:
+    metadata:
+      labels:
+        app: nodeapp
+    spec:
+      containers:
+      - name: nodejs-test
+        image: 655307685566.dkr.ecr.us-east-1.amazonaws.com/nodejs-test:latest
+        resources:
+          requests:
+            memory: 64Mi
+            cpu: 250m
+          limits:
+            memory: 128Mi
+            cpu: 500m
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+      #priorityClassName: high-priority
+---
