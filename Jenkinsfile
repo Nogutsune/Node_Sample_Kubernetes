@@ -3,6 +3,9 @@ pipeline {
     parameters {
         string(name: 'TERRAFORM_GIT_URI', defaultValue: 'git@github.com:Nogutsune/Node_Sample_Kubernetes.git', description:'Git URI')
         string(name: 'TERRAFORM_GIT_BRANCH', defaultValue: 'master', description:'Git branch ')
+        string(name: 'DOCKER_REPO_NAME', defaultValue: 'nodejs-test', description:'Docker repository name')
+        string(name: 'DOCKER_REPO_URL', defaultValue: '655307685566.dkr.ecr.us-east-1.amazonaws.com', description:'Docker repository URL')
+        string(name: 'DOCKER_HTTPS_REPO_URL', defaultValue: 'https://655307685566.dkr.ecr.us-east-1.amazonaws.com', description:'Docker repository HTTPS URL')
     }
     environment {
         TF_HOME = tool('terraform-1.0.9')
@@ -38,5 +41,33 @@ pipeline {
                     }
                 }
             }
-        }
+
+          stage('Build Sample App Docker Image'){
+            steps {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'jenkins-test-user', variable: 'AWS_ACCESS_KEY_ID']]) {
+                script {
+                    sh "cd sample_node_app"
+                    def image = docker.build("${params.DOCKER_REPO_NAME}:${BUILD_NUMBER}", '-f Dockerfile .')
+                    docker.withRegistry("${params.DOCKER_HTTPS_REPO_URL}", 'ecr:us-east-1:jenkins-test-user'){
+                        withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'jenkins-test-user', accessKeyVariable: 'AWS_ACCESS_KEY_ID',secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                        sh("eval \$(aws ecr get-login --no-include-email | sed 's|https://||')")
+                            }
+                        sh "docker tag ${params.DOCKER_REPO_NAME}:${BUILD_NUMBER} ${params.DOCKER_REPO_URL}/${params.DOCKER_REPO_NAME}:v_${BUILD_NUMBER}"
+                        sh "docker tag ${params.DOCKER_REPO_NAME}:${BUILD_NUMBER} ${params.DOCKER_REPO_URL}/${params.DOCKER_REPO_NAME}:latest"
+                        sh "docker push ${params.DOCKER_REPO_URL}/${params.DOCKER_REPO_NAME}"
+                    }
+                }
+             }
+          }
+       }
+       stage('kubernetes deploy'){
+           steps {
+               script{
+                      sh "aws eks --region us-east-1 update-kubeconfig --name insider-master-node"
+                      sh "kubectl apply -f kubernetes/"
+                   }
+               }
+           }
+
+    }
 }
