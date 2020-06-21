@@ -62,11 +62,13 @@ pipeline {
        }
        stage('kubernetes deploy'){
            steps {
+               withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'jenkins-test-user', variable: 'AWS_ACCESS_KEY_ID']]) {
                script{
                       sh "aws eks --region us-east-1 update-kubeconfig --name insider-master-node"
                       sh "kubectl apply -f kubernetes/"
                    }
-               }
+                }
+              }
            }
 
     }
