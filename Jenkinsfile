@@ -13,7 +13,7 @@ pipeline {
     }
 
     stages {
-        stage('Terraform Init & Plan'){
+        stage('TerraformInit_&_Plan'){
             steps {
                 git branch: "${params.TERRAFORM_GIT_BRANCH}",
                     url: "${params.TERRAFORM_GIT_URI}"
