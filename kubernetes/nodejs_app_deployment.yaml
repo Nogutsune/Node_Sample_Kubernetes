@@ -40,5 +40,5 @@ spec:
         ports:
         - containerPort: 3000
           protocol: TCP
-      #priorityClassName: high-priority
+      priorityClassName: high-priority
 ---

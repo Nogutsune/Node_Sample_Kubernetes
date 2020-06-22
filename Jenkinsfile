@@ -42,7 +42,7 @@ pipeline {
                 }
             }
 
-          stage('Build Sample App Docker Image'){
+          stage('Build&PushSampleAppDockerImage'){
             steps {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'jenkins-test-user', variable: 'AWS_ACCESS_KEY_ID']]) {
                 script {
@@ -60,12 +60,16 @@ pipeline {
              }
           }
        }
-       stage('kubernetes deploy'){
+       stage('KubernetesDeploy'){
            steps {
                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'jenkins-test-user', variable: 'AWS_ACCESS_KEY_ID']]) {
                script{
                       sh "aws eks --region us-east-1 update-kubeconfig --name insider-master-node"
                       sh "kubectl apply -f kubernetes/"
+                      sh "sleep 60s"
+                      sh """ export Node_ELB=$(kubectl get svc insider-elb-service -o jsonpath="{.status.loadBalancer.ingress[].hostname}")
+                             echo "Service_Url = $Node_ELB"
+                      """
                    }
                 }
               }
