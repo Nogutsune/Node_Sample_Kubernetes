@@ -51,4 +51,18 @@ This is a simple Node App that is deployed on Kubernetes and I have used for ter
   Refer terraform folders.
 - **Bonus points if you also load test the application and include the test results in your submission.**
 
+  I have done the application load testing by using a tool called seige, refer[Documentation](https://github.com/JoeDog/siege)
+  Steps performed
+  ``` 
+  # first get classical load balancer url, exporte as $Node_ELB
+  
+  export Node_ELB=$(kubectl get svc insider-elb-service -o jsonpath="{.status.loadBalancer.ingress[].hostname}")
+  
+  #Run seige command with appropriate parameter (-q >> QUIET turns verbose off and suppresses output, -c >>CONCURRENT users ,-t >>TIMED testing where "m" is modifier S, M.)
+  
+  siege -q -t 15S -c 200 -i http://${Node_ELB}
+  ```
+  Results
+  ![snapshot 1](https://github.com/Nogutsune/Node_Sample_Kubernetes/blob/master/images/load_test_snapshot_1.png)  
+  ![snapshot 2](https://github.com/Nogutsune/Node_Sample_Kubernetes/blob/master/images/load_test_snapshot_2.png) 
 
