@@ -3,4 +3,6 @@ This is a simple Node App that is deployed on Kubernetes and I have used for ter
 
 ## Directories/Files Overview ## 
 
-- **sample_node_app** : It contains the source code for the simple nodejs application, just prints out text on the web browser.This folder also contains Dockerfile and later I build the image and pushed to ecr repository.
+- **sample_node_app** : It contains the source code (index.js & package.json) for the simple nodejs application, just prints out text on the web browser.This folder also contains Dockerfile and later I build the image and pushed to ecr repository.
+
+- 
