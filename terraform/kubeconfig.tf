@@ -1,3 +1,5 @@
+######################## for registering worker node with eks cluster #####################################
+
 locals {
   kubeconfig = <<KUBECONFIG
 apiVersion: v1

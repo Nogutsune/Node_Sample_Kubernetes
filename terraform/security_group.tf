@@ -1,3 +1,4 @@
+####################### Master Node SG (EKS)####################################
 resource "aws_security_group" "master-node-sg" {
   name        = "insider-master-node-sg"
   description = "Cluster communication with worker nodes"
@@ -15,7 +16,7 @@ resource "aws_security_group" "master-node-sg" {
   }
 }
 
-
+####################### Worker Node SG ####################################
 resource "aws_security_group" "worker-node-sg" {
   name        = "insider_worker_node_sg"
   description = "Security group for all nodes in the cluster"
@@ -35,8 +36,7 @@ resource "aws_security_group" "worker-node-sg" {
 
 
 # Allow inbound traffic from your local workstation external IP
-# to the Kubernetes. You will need to replace A.B.C.D below with
-# your real IP. Services like icanhazip.com can help you find this.
+# to the Kubernetes. I have added 0.0.0.0/0 for convenience
 
 resource "aws_security_group_rule" "tf-eks-cluster-ingress-workstation-https" {
   cidr_blocks       = ["0.0.0.0/0"]

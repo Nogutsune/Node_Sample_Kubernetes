@@ -1,7 +1,4 @@
 
-
-
-######################### vpc #########################
 variable environment {
   default = "insider"
 }
