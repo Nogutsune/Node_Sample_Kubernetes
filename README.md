@@ -12,3 +12,5 @@ This is a simple Node App that is deployed on Kubernetes and I have used for ter
 - **terraform** : This folder contains entire infrastructure automation including networking, access(RBAC) , master-node control plane and worker-node setup for EKS. In the `Jenkinsfile` I ran terrform init , terraform plan & terraform apply commands. 
 
 - **Jenkinsfile** : CI/CD process for entire project, containing different stages to build infrastructure (`TerraformInit_&_Plan` and `TerraformApply`), build & push docker image (`Build&PushSampleAppDockerImage`) and deploy kubernetes deployment and service (`KubernetesDeploy`). Atlast stage we will get `Service_Url` i.e. loadbalancer url.
+
+![final deployed project view](https://github.com/Nogutsune/Node_Sample_Kubernetes/blob/master/images/final_view.png?raw=true)
