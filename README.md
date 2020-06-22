@@ -24,9 +24,31 @@ This is a simple Node App that is deployed on Kubernetes and I have used for ter
 
   I have created *kubernetes/autoscaling_hpa.yaml* which autoscales pods from 10 to 15 if averageCPUutilization reaches 50% or if averageMemoryUtilization reaches 60%. 
 - **Use a custom docker image hosted on ECR called nodejs-test:latest (any region).**
+
+  Created *nodejs-test* ecr repository via terraform refer *terraform/ecr.tf* . In *Jenkinsfile* in `Build&PushSampleAppDockerImage` stage, after building and tagging image I push image (tagged `655307685566.dkr.ecr.us-east-1.amazonaws.com/nodejs-test:latest`) to this ecr. 
 - **Bonus points if you include how to login and pull an image from ECR.**
+
+  I have created a role for worker nodes and included the policy `arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly` refer *terraform/iam.tf* , then I can use `image: 655307685566.dkr.ecr.us-east-1.amazonaws.com/nodejs-test:latest` in *kubernetes/nodejs_app_deployment.yaml* it can automatically pull image from ecr. 
 - **Expose the app on port 3000 via an EC2 classic load balancer.**
+
+  The node application expose port 3000 refer *sample_node_app/Dockerfile* which is further used as container port in *kubernetes/nodejs_app_deployment.yaml* and in the *kubernetes/nodejs_app_service.yaml* I have created classical loadbalancer to serve the application
 - **Any change to the deployment should always ensure at least 7 replicas are running at all times.**
+
+  In *kubernetes/nodejs_app_deployment.yaml* I have configured rolling update as deployment strategy to make sure 7 pods are always available 
+
+```strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 3
+  ```
+      
 - **Should have higher priority than daemonset pods.**
+
+  Created *kubernetes/priority_class.yml* which setup priority class of the pods and later configured in *kubernetes/nodejs_app_deployment.yaml* `priorityClassName: high-priority`
 - **Bonus points if you do the task as code i.e. using terraform or any other configuration language of your choice.**
+
+  Refer terraform folders.
 - **Bonus points if you also load test the application and include the test results in your submission.**
+
+
