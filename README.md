@@ -63,6 +63,7 @@ This is a simple Node App that is deployed on Kubernetes and I have used for ter
   siege -q -t 15S -c 200 -i http://${Node_ELB}
   ```
   Results
+  
   ![snapshot 1](https://github.com/Nogutsune/Node_Sample_Kubernetes/blob/master/images/load_test_snapshot_1.png)  
   ![snapshot 2](https://github.com/Nogutsune/Node_Sample_Kubernetes/blob/master/images/load_test_snapshot_2.png) 
 
