@@ -2,7 +2,7 @@
 # setup provider for kubernetes
 
 data "external" "aws_iam_authenticator" {
-  program = ["sh", "-c", "aws-iam-authenticator token -i example | jq -r -c .status"]
+  program = ["sh", "-c", "aws-iam-authenticator token -i insider-master-node | jq -r -c .status"]
 }
 
 provider "kubernetes" {
